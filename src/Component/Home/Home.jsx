@@ -9,7 +9,7 @@ const Home = () => {
   const [singleUser, setsingleUser] = useState([]);
   const [userInfo, setuserInfo] = useState([]);
   const { data: users = [], refetch } = useQuery("UserData", () =>
-    axios.get(`http://localhost:5000/getUser`).then((res) => {
+    axios.get(`https://user-menegment-server-side.vercel.app/getUser`).then((res) => {
       return res.data;
     })
   );
@@ -41,7 +41,7 @@ const Home = () => {
         const { name, email, phone } = data;
         const userInfo = { name, email, phone, imageUrl };
         axios
-          .patch(`http://localhost:5000/updateUser/${email}`, userInfo)
+          .patch(`https://user-menegment-server-side.vercel.app/updateUser/${email}`, userInfo)
           .then((res) => {
             console.log(res.data);
             refetch();
@@ -50,7 +50,7 @@ const Home = () => {
               Swal.fire({
                 position: "center",
                 icon: "success",
-                title: "Create a new user successfully",
+                title: "Update User Information successfully",
                 showConfirmButton: false,
                 timer: 1500,
               });
@@ -69,7 +69,7 @@ const Home = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        axios.delete(`http://localhost:5000/deleteUser/${id}`).then((res) => {
+        axios.delete(`https://user-menegment-server-side.vercel.app/deleteUser/${id}`).then((res) => {
           refetch();
           if (res.data.deletedCount > 0) {
             Swal.fire(

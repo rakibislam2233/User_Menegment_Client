@@ -26,7 +26,7 @@ const AddUser = () => {
         const imageUrl = imageData.data.display_url;
         const {name,email,phone} = data;
         const userInfo = {name,email,phone,imageUrl}
-        axios.post(`http://localhost:5000/addUser`, userInfo)
+        axios.post(`https://user-menegment-server-side.vercel.app/addUser`, userInfo)
         .then(res=>{
             if(res.data.insertedId){
                 reset()
