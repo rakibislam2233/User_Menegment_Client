@@ -5,10 +5,12 @@ import { BsEye, BsPencilSquare, BsPlus, BsTrashFill } from "react-icons/bs";
 import Swal from "sweetalert2";
 import { useForm } from "react-hook-form";
 import { useQuery } from "react-query";
+import Lottie from "lottie-react";
+import loading from "../../assets/lotti/99318-hms-loading.json";
 const Home = () => {
   const [singleUser, setsingleUser] = useState([]);
   const [userInfo, setuserInfo] = useState([]);
-  const { data: users = [], refetch } = useQuery("UserData", () =>
+  const { data: users = [], refetch,isLoading} = useQuery("UserData", () =>
     axios.get(`https://user-menegment-server-side.vercel.app/getUser`).then((res) => {
       return res.data;
     })
@@ -98,68 +100,70 @@ const Home = () => {
           </Link>
         </div>
         <div>
-          <div className="overflow-x-auto">
-            <table className="table">
-              {/* head */}
-              <thead>
+       {
+        isLoading ? <div className="flex justify-center items-center"><Lottie animationData={loading} loop={true} /></div> :    <div className="overflow-x-auto">
+        <table className="table">
+          {/* head */}
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>View</th>
+              <th>Edit</th>
+              <th>Remove</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <>
                 <tr>
-                  <th>Image</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Phone</th>
-                  <th>View</th>
-                  <th>Edit</th>
-                  <th>Remove</th>
+                  <td>
+                    <img
+                      className="w-12  h-12 rounded-xl"
+                      src={user.imageUrl}
+                      alt=""
+                    />
+                  </td>
+                  <td>{user.name}</td>
+                  <td>{user.email}</td>
+                  <td>{user.phone}</td>
+                  <td>
+                    <button
+                      onClick={() => [
+                        window.my_modal_3.showModal(),
+                        ViewUser(user),
+                      ]}
+                      className="w-10 h-10 flex justify-center items-center bg-gradient-to-r from-blue-500 to-cyan-500 rounded text-white"
+                    >
+                      <BsEye className="w-5 h-5"></BsEye>
+                    </button>
+                  </td>
+                  <td>
+                    <label
+                      onClick={() => updateInfo(user)}
+                      htmlFor="my_modal_6"
+                      className="w-10 h-10 flex justify-center items-center bg-gradient-to-r from-blue-500 to-cyan-500 rounded text-white cursor-pointer"
+                    >
+                      <BsPencilSquare className="w-5 h-5"></BsPencilSquare>
+                    </label>
+                  </td>
+                  <td>
+                    <button
+                      onClick={() => deleteUser(user._id)}
+                      className="w-10 h-10 flex justify-center items-center bg-rose-600 rounded text-white"
+                    >
+                      <BsTrashFill className="w-5 h-5"></BsTrashFill>
+                    </button>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {users.map((user) => (
-                  <>
-                    <tr>
-                      <td>
-                        <img
-                          className="w-12  h-12 rounded-xl"
-                          src={user.imageUrl}
-                          alt=""
-                        />
-                      </td>
-                      <td>{user.name}</td>
-                      <td>{user.email}</td>
-                      <td>{user.phone}</td>
-                      <td>
-                        <button
-                          onClick={() => [
-                            window.my_modal_3.showModal(),
-                            ViewUser(user),
-                          ]}
-                          className="w-10 h-10 flex justify-center items-center bg-gradient-to-r from-blue-500 to-cyan-500 rounded text-white"
-                        >
-                          <BsEye className="w-5 h-5"></BsEye>
-                        </button>
-                      </td>
-                      <td>
-                        <label
-                          onClick={() => updateInfo(user)}
-                          htmlFor="my_modal_6"
-                          className="w-10 h-10 flex justify-center items-center bg-gradient-to-r from-blue-500 to-cyan-500 rounded text-white cursor-pointer"
-                        >
-                          <BsPencilSquare className="w-5 h-5"></BsPencilSquare>
-                        </label>
-                      </td>
-                      <td>
-                        <button
-                          onClick={() => deleteUser(user._id)}
-                          className="w-10 h-10 flex justify-center items-center bg-rose-600 rounded text-white"
-                        >
-                          <BsTrashFill className="w-5 h-5"></BsTrashFill>
-                        </button>
-                      </td>
-                    </tr>
-                  </>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              </>
+            ))}
+          </tbody>
+        </table>
+      </div>
+       }
         </div>
         <dialog id="my_modal_3" className="modal">
           <form method="dialog" className="modal-box">
